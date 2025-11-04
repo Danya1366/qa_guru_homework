@@ -35,7 +35,7 @@ def create_user(user: User) -> User:
     return users.create_user(user)
 
 @router.patch("/{user_id}", status_code=HTTPStatus.OK)
-def update_user(user_id: int, user: User) -> User:
+def update_user(user_id: int, user: UserUpdate) -> User:
     if user_id < 1:
         raise HTTPException(status_code=HTTPStatus.UNPROCESSABLE_ENTITY, detail="invalid user")
     UserUpdate.model_validate(user)
@@ -56,4 +56,4 @@ def clear_all_users():
     ⚠️ НЕ ИСПОЛЬЗОВАТЬ в продакшене!
     """
     users.clear()  # или ваш способ очистки
-    return
+    return {"message": "all users deleted"}
