@@ -7,23 +7,6 @@ from app.models.User import User
 
 
 
-
-@pytest.fixture(scope="module")
-def fill_test_data(app_url):
-    with open("users.json") as f:
-        test_data_users = json.load(f)
-    api_users = []
-    for user in test_data_users:
-        response = requests.post(f"{app_url}/api/users", json=user)
-        api_users.append(response.json())
-    user_ids = [user["id"] for user in api_users]
-
-    yield user_ids
-
-    for user_id in user_ids:
-        requests.delete(f"{app_url}/api/users/{user_id}")
-
-
 @pytest.fixture
 def users(app_url):
     response = requests.get(f"{app_url}/api/users/")
@@ -54,9 +37,11 @@ def test_user(app_url, fill_test_data):
         User.model_validate(user)
 
 
-@pytest.mark.parametrize("user_id", [13])
-def test_user_nonexistent_values(app_url, user_id):
-    response = requests.get(f"{app_url}/api/users/{user_id}")
+# @pytest.mark.usefixtures("fill_test_data")
+def test_user_nonexistent_values(app_url, fill_test_data):
+    max_existing_id = max(fill_test_data) if fill_test_data else 0
+    nonexistent_id = max_existing_id + 1
+    response = requests.get(f"{app_url}/api/users/{nonexistent_id}")
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 

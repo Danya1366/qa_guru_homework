@@ -10,5 +10,5 @@ def test_smoke_status(app_url):
     print('service_available')
     assert response.status_code == 200, f"Ожидался статус 200, получен {response.status_code}"
     data = response.json()
-    assert "users" in data, "Ответ не содержит ключ 'users'"
-    assert data["users"] is True, "Сервис 'users' недоступен"
+    assert "database" in data, "Ответ не содержит ключ 'database'"
+    assert data["database"] is True, "'Сервис базы данных' недоступен"

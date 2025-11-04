@@ -7,6 +7,7 @@ from fastapi_pagination import  Page, add_pagination, paginate
 from app.database import users
 from app.models.User import User, UserCreate, UserUpdate
 
+
 app = FastAPI
 router = APIRouter(prefix = "/api/users")
 # add_pagination(app)
@@ -39,9 +40,20 @@ def update_user(user_id: int, user: User) -> User:
         raise HTTPException(status_code=HTTPStatus.UNPROCESSABLE_ENTITY, detail="invalid user")
     UserUpdate.model_validate(user)
     return users.update_user(user_id, user)
-@router.delete("/{user_id", status_code=HTTPStatus.OK)
-def delete(user_id: int):
-    if user_id<1:
+
+@router.delete("/{user_id}", status_code=HTTPStatus.OK)
+def delete_user(user_id: int):
+    if user_id < 1:
         raise HTTPException(status_code=HTTPStatus.UNPROCESSABLE_ENTITY, detail='invalid user')
     users.delete_user(user_id)
     return {"message": "User deleted"}
+
+
+@router.delete("/actions/clear", status_code=HTTPStatus.NO_CONTENT)
+def clear_all_users():
+    """
+    Удаляет всех пользователей.
+    ⚠️ НЕ ИСПОЛЬЗОВАТЬ в продакшене!
+    """
+    users.clear()  # или ваш способ очистки
+    return

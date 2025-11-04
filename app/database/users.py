@@ -23,9 +23,16 @@ def create_user(user: User) -> User:
         session.refresh(user)
         return user
 
-def delete_user(user_id: int) -> User:
+def clear():
     with Session(engine) as session:
-        user = session.get(User,user_id)
+        users = session.exec(select(User)).all()
+        for user in users:
+            session.delete(user)
+        session.commit()
+
+def delete_user(user_id: int):
+    with Session(engine) as session:
+        user = session.get(User, user_id)
         session.delete(user)
         session.commit()
 
@@ -38,5 +45,6 @@ def update_user(user_id: int, user: User) -> type[User]:
         db_user.sqlmodel_update(user_data)
         session.add(db_user)
         session.commit()
-        session.refresh()
+        session.refresh(db_user)
         return db_user
+

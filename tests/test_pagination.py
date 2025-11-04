@@ -4,11 +4,14 @@ from http import HTTPStatus
 import pytest
 import requests
 
-def test_total(app_url):
+from tests.conftest import fill_test_data
+
+
+def test_total(app_url, fill_test_data):
     response = requests.get(f"{app_url}/api/users/?page=1&size=5")
     assert response.status_code == HTTPStatus.OK
-    data = response.json()
-    assert data["total"] == 12
+    total = response.json()
+    assert total["total"] == len(fill_test_data)
 
 @pytest.mark.parametrize("size", [1, 7, 12])
 def test_pages_depending_on_size(app_url, size):
