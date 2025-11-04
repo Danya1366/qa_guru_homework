@@ -6,3 +6,7 @@ requests
 pydantic
 
 fastapi-pagination
+
+psycopg2-binary
+sqlalchemy
+sqlmodel
