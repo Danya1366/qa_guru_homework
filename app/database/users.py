@@ -5,7 +5,7 @@ from requests import session
 
 from .engine import engine
 from sqlmodel import Session, select
-from app.models.User import User, UserCreate
+from app.models.User import User, UserCreate, UserUpdate
 
 
 def get_user(user_id: int) -> User | None:
@@ -37,7 +37,7 @@ def delete_user(user_id: int):
         session.delete(user)
         session.commit()
 
-def update_user(user_id: int, user: User) -> type[User]:
+def update_user(user_id: int, user: UserUpdate) -> type[User]:
     with Session(engine) as session:
         db_user = session.get(User, user_id)
         if not db_user:
