@@ -1,7 +1,7 @@
 
 on:
   pull_request:
-    branchers:
+    branches:
       - main
 
 jobs:
@@ -13,7 +13,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
-          cache: 'pip'
+          cache: 'poetry'
+      - run: pipx install poetry
       - run: poetry install --no-interaction
       - run: docker compose up -d --build
       - run: pytest tests
