@@ -15,7 +15,7 @@ jobs:
           python-version: '3.13'
           cache: 'poetry'
       - run: poetry install --no-interaction
-      - run: docker compose ip -d --build
+      - run: docker compose up -d --build
       - run: pytest tests
 
       - run: docker compose logs app
