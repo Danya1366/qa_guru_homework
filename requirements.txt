@@ -1,0 +1,12 @@
+pytest
+fastapi
+email-validator
+python-dotenv
+requests
+pydantic
+
+fastapi-pagination
+
+psycopg2-binary
+sqlalchemy
+sqlmodel
