@@ -1,11 +1,10 @@
 from http.client import HTTPException
 from typing import Iterable
 
-from requests import session
-
-from .engine import engine
 from sqlmodel import Session, select
+
 from app.models.User import User, UserCreate, UserUpdate
+from app.database.engine import engine
 
 
 def get_user(user_id: int) -> User | None:
