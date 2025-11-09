@@ -1,0 +1,22 @@
+
+on:
+  pull_request:
+    branchers:
+      - main
+
+jobs:
+  tests:
+    name: Test app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: 'poetry'
+      - run: poetry install --no-interaction
+      - run: docker compose ip -d --build
+      - run: pytest tests
+
+      - run: docker compose logs app
+        if: always()
