@@ -5,8 +5,8 @@ import pytest
 import requests
 
 
-def test_smoke_status(app_url):
-    response = requests.get(f"{app_url}/status")
+def test_smoke_status(status_api):
+    response = status_api.get_status()
     print('service_available')
     assert response.status_code == 200, f"Ожидался статус 200, получен {response.status_code}"
     data = response.json()

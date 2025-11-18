@@ -6,33 +6,49 @@ import requests
 
 import dotenv
 import pytest
-from requests import session
-
+from api_client import UsersApi, StatusApi
 
 @pytest.fixture(scope = "session", autouse=True)
 def envs():
     dotenv.load_dotenv()
 
 
+def pytest_addoption(parser):
+    parser.addoption("--env", default="dev")
+
+
+@pytest.fixture(scope="session")
+def env(request):
+    return request.config.getoption("--env")
+
+
 @pytest.fixture(scope = "session")
 def app_url():
     return os.getenv("APP_URL")
 
+@pytest.fixture(scope="session")
+def users_api(env):
+    return UsersApi(env)
+
+@pytest.fixture(scope="session")
+def status_api(env):
+    return StatusApi(env)
+
 
 @pytest.fixture(scope="module")
-def fill_test_data(app_url):
+def fill_test_data(users_api):
     with open("users.json") as f:
         test_data_users = json.load(f)
     api_users = []
     for user in test_data_users:
-        response = requests.post(f"{app_url}/api/users", json=user)
+        response = users_api.create_user(user)
         api_users.append(response.json())
     user_ids = [user["id"] for user in api_users]
 
     yield user_ids
 
     for user_id in user_ids:
-        requests.delete(f"{app_url}/api/users/{user_id}")
+        users_api.delete_user(user_id)
 
 
 
@@ -46,14 +62,14 @@ def valid_user_data():
     }
 
 @pytest.fixture
-def created_user_data(app_url,valid_user_data):
-    response = requests.post(f"{app_url}/api/users/", json=valid_user_data)
+def created_user_data(users_api,valid_user_data):
+    response = users_api.create_user(valid_user_data)
     assert response.status_code == HTTPStatus.CREATED
     created_user = response.json()
 
     yield created_user
 
-    requests.delete(f"{app_url}/api/users/{created_user['id']}")
+    users_api.delete_user(created_user)
 
 @pytest.fixture
 def update_user_data():
