@@ -1,5 +1,5 @@
-from base_session import BaseSession
-from config import Server
+from core.base_session import BaseSession
+from core.config import Server
 
 
 class UsersApi:

@@ -2,11 +2,9 @@ import os
 import json
 from http import HTTPStatus
 
-import requests
-
 import dotenv
 import pytest
-from api_client import UsersApi, StatusApi
+from tests.api_client import UsersApi, StatusApi
 
 @pytest.fixture(scope = "session", autouse=True)
 def envs():
